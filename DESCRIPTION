@@ -1,9 +1,9 @@
 Package: createmaptiles
 Type: Package
-Title: What the package does (short line)
+Title: Creates map tiles from spatial objects
 Version: 1.0
 Date: 2013-10-17
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: TJ McKinley
+Maintainer: TJ McKinley <tjm44@cam.ac.uk>
+Description: This packages takes 'Spatial' objects (as defined in the 'sp' package), and creates map tiles that can be used for scrollable maps.
+License: GPL-3
