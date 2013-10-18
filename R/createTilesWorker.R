@@ -1,5 +1,5 @@
 #worker function to create maptiles
-createTilesWorker <- function(object, start_tiles, start_zoom, max_zoom, title)
+createTilesWorker <- function(object, start_tiles, start_zoom, max_zoom, title, tms)
 {
 	#extract elements of interest from start_tiles
 	start_coords <- start_tiles$coords
@@ -17,6 +17,13 @@ createTilesWorker <- function(object, start_tiles, start_zoom, max_zoom, title)
 	dir.create(paste0(title, "/", start_zoom))
 	#create sub-directories based on x- and y-coordinates
 	for(i in unique(start_coords[, 1]))	dir.create(paste(c(title, start_zoom, i), collapse = "/"))
+	
+	#convert coordinates to TMS if required
+	if(tms == TRUE)
+	{
+		nrows <- 2 ^ start_zoom
+		start_coords[, 2] <- nrows - start_coords[, 2] - 1
+	}
 			
 	#now plot into directories
 	for(i in 1:nrow(start_coords))
@@ -29,7 +36,7 @@ createTilesWorker <- function(object, start_tiles, start_zoom, max_zoom, title)
 	}
 	
 	#now cycle through zoom-levels using a recursive function
-	ind <- createTilesRecur(object, start_coords, start_zoom, title, max_zoom)
+	ind <- createTilesRecur(object, start_coords, start_zoom, title, max_zoom, tms)
 	
 	if(ind == 1) cat("Tiles created successfully\n")
 	else cat("Error in creation of tiles!\n")

@@ -1,5 +1,5 @@
 #recursive function to produce plots
-createTilesRecur <- function(object, start_coords, zoom, title, max_zoom)
+createTilesRecur <- function(object, start_coords, zoom, title, max_zoom, tms)
 {
 	if(zoom < max_zoom) ind <- 0
 	else ind <- 1
@@ -8,8 +8,8 @@ createTilesRecur <- function(object, start_coords, zoom, title, max_zoom)
 	
 	while(ind == 0)
 	{		
-		#convert coordinates to TMS
-		start_coords[, 2] <- (2 ^ (zoom - 1)) - start_coords[, 2] - 1
+		#convert coordinates to OSM
+		if(tms == TRUE) start_coords[, 2] <- (2 ^ (zoom - 1)) - start_coords[, 2] - 1
 		
 		#create coordinates for next zoom level
 		coords <- apply(start_coords, 1, function(x)
@@ -33,7 +33,7 @@ createTilesRecur <- function(object, start_coords, zoom, title, max_zoom)
 		tiles <- tiles * 6378137
 				
 		#convert coordinates to TMS
-		coords[, 2] <- (2 ^ zoom) - coords[, 2] - 1
+		if(tms == TRUE) coords[, 2] <- (2 ^ zoom) - coords[, 2] - 1
 	
 		#create directories based on initial tiles
 		dir.create(paste0(title, "/", zoom))
@@ -50,7 +50,7 @@ createTilesRecur <- function(object, start_coords, zoom, title, max_zoom)
 			dev.off()
 		}
 		#run next recursive function
-		ind <- createTilesRecur(object, coords, zoom, title, max_zoom)
+		ind <- createTilesRecur(object, coords, zoom, title, max_zoom, tms)
 	}
 	ind
 }

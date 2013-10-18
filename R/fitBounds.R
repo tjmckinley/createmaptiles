@@ -15,8 +15,7 @@ fitBounds <- function(bounds, zoom)
 	#(partially-) containing the bounding box
 	coords <- coords[fits > 0, ]
 	coords1 <- coords1[fits > 0, ]
-	#convert coordinates to TMS
-	coords[, 2] <- nrows - coords[,2] - 1
+	#output list of coordinates and tiles
 	list(coords = coords, longlat = coords1)
 }
 

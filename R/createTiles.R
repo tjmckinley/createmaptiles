@@ -12,12 +12,13 @@
 #' @param title a character specifying the name of the map tile folder to save to.
 #' @param max_zoom a numeric specifying the maximum zoom level to create tiles for (should
 #' range between 0-18.
+#' @param tms sets map tile coordinates to TMS or OSM specification.
 #' @author TJ McKinley
 #' @references http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 #'
 #' @export createTiles
 
-createTiles <- function(object, title, max_zoom = 18)
+createTiles <- function(object, title, max_zoom = 18, tms = FALSE)
 {
 	#some checks to ensure correct inputs
 	if(missing(object))
@@ -70,6 +71,16 @@ createTiles <- function(object, title, max_zoom = 18)
 		cat("'max_zoom' not in the range 0-18\n")
 		return(1)
 	}
+	if(!is.logical(tms))
+	{
+		cat("'tms' is not a logical value")
+		return(1)
+	}
+	if(length(tms) > 1)
+	{
+		cat("'tms' has length > 1, so only first element is used\n")
+		tms <- tms[1]
+	}
 		
 	#convert object to latitude/longitude
 	if(proj4string(object) != "+proj=longlat +ellps=WGS84") object <- spTransform(object, CRS("+proj=longlat"))
@@ -87,5 +98,5 @@ createTiles <- function(object, title, max_zoom = 18)
 	object <- spTransform(object, CRS("+proj=merc"))
 	
 	#create tiles
-	createTilesWorker(object, start_tiles, zoom, max_zoom, title)
+	createTilesWorker(object, start_tiles, zoom, max_zoom, title, tms)
 }
