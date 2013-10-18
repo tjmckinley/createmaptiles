@@ -5,8 +5,20 @@ Version: 1.0
 Date: 2013-10-17
 Author: TJ McKinley
 Maintainer: TJ McKinley <tjm44@cam.ac.uk>
-Description: This packages takes 'Spatial' objects (as defined in the 'sp' package), and creates map tiles that can be used for scrollable maps.
+Description: This packages takes 'Spatial' objects (as defined in the 'sp'
+    package), and creates map tiles that can be used for scrollable maps.
 Depends:
-	sp,
-	rgdal
+    sp,
+    rgdal
 License: GPL-3
+Collate:
+    'areaRect.R'
+    'calcTileCoords.R'
+    'containsBounds.R'
+    'createTiles.R'
+    'createTilesRecur.R'
+    'createTilesWorker.R'
+    'findMinZoom.R'
+    'fitBounds.R'
+    'LongLatToTileNum.R'
+    'TileNumToLongLat.R'
