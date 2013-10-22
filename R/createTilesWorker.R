@@ -34,6 +34,7 @@ createTilesWorker <- function(object, start_tiles, start_zoom, max_zoom, title, 
 		plot(object, xlim = start_tiles[i, 1:2], ylim = start_tiles[i, 3:4])
 		dev.off()
 	}
+	cat(paste("Completed zoom level:", start_zoom, "\n"))
 	
 	#now cycle through zoom-levels using a recursive function
 	ind <- createTilesRecur(object, start_coords, start_zoom, title, max_zoom, tms)

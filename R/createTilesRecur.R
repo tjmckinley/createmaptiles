@@ -49,6 +49,8 @@ createTilesRecur <- function(object, start_coords, zoom, title, max_zoom, tms)
 			plot(object, xlim = tiles[i, 1:2], ylim = tiles[i, 3:4])
 			dev.off()
 		}
+		cat(paste("Completed zoom level:", zoom, "\n"))
+		
 		#run next recursive function
 		ind <- createTilesRecur(object, coords, zoom, title, max_zoom, tms)
 	}
