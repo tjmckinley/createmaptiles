@@ -36,6 +36,10 @@ fitBounds <- function(object, min_zoom, max_zoom)
 		#output tiles matching to polygon
 		if(!is.null(prev_coords)) output[[i]] <- rbind(prev_coords, cur_coords)
 		else output[[i]] <- cur_coords
+		
+		#tidy up output
+		colnames(output[[i]]) <- c("x", "y", "zoom")
+		rownames(output[[i]]) <- 1:nrow(output[[i]])
 	}
 	output <- list(min_zoom = min_zoom, max_zoom = max_zoom, coords = output)
 	output

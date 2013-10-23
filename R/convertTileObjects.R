@@ -20,6 +20,8 @@ convertToTileObject <- function(object, min_zoom = 1, max_zoom = 18)
 	res
 }
 
+#function that takes a SpatialPolygonsTiles object and produces a SpatialPolygonsDataFrame
+#object
 convertFromTileObject <- function(object)
 {
 	#some checks to ensure correct inputs
@@ -33,3 +35,17 @@ convertFromTileObject <- function(object)
 	res@polygons <- object@polygons
 	res
 }
+
+#internal function to be used in subsetting
+convertToTileObject_internal <- function(object, tiles = NA)
+{		
+	res <- new("SpatialPolygonsTiles")
+	res@bbox <- object@bbox
+	res@proj4string <- object@proj4string
+	res@plotOrder <- object@plotOrder
+	res@data <- object@data
+	res@polygons <- object@polygons
+	res@tiles <- tiles
+	res
+}
+

@@ -1,3 +1,21 @@
 #method to produce map tiles from SpatialPolygonsTiles object
 setMethod("tiles", signature(object = "SpatialPolygonsTiles"),
 	function(object, ...) createTiles(object, ...))
+	
+#method to amend subsetting to include subsetting tiles
+setMethod("[", "SpatialPolygonsTiles", function(x, i, j, ... , drop = TRUE)
+{
+	#subset the SpatialPolygonsDataFrame object
+	temp <- convertFromTileObject(x)
+	temp <- temp[i, j, ..., drop = FALSE]
+	
+	#subset the tiles
+	tiles <- x@tiles$coords
+	tiles <- tiles[i]
+	tiles <- list(min_zoom = x@tiles$min_zoom, max_zoom = x@tiles$max_zoom, coords = tiles)
+		
+	#convert back to SpatialPolygonsTiles object	
+	x <- convertToTileObject_internal(temp, tiles)
+	x
+})
+
