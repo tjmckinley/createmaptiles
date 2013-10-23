@@ -1,6 +1,6 @@
 #function that takes a SpatialPolygonsDataFrame object and produces map tiles
 
-createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask = TRUE)
+createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask = TRUE, ...)
 {
 	#some checks to ensure correct inputs
 	if(missing(object)) stop("'object' missing\n")
@@ -106,7 +106,7 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 		pathtofile <- file.path(title, tiles[i, 3], tiles[i, 1])
 		png(file.path(pathtofile, paste0(tiles[i, 2], ".png")), width = 248, height = 248, bg = 'transparent')
 		par(mar = c(0, 0, 0, 0), xaxs = "i", yaxs = "i")
-		plot(temp_polys, xlim = temp_tiles[1:2], ylim = temp_tiles[3:4])
+		plot(temp_polys, xlim = temp_tiles[1:2], ylim = temp_tiles[3:4], ...)
 		dev.off()
 	}
 }
