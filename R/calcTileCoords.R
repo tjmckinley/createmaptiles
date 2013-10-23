@@ -14,7 +14,7 @@ calcTileCoords <- function(coords, zoom)
 
 	#append coordinates together to form tile coordinates
 	coords <- c(top_left, bottom_right)
-	coords <- coords[c(1, 3, 4, 2)]
+	coords <- as.numeric(coords[c(1, 3, 4, 2)])
 	coords
 }
 
