@@ -28,6 +28,36 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 		tms <- tms[1]
 	}
 	
+	#extract only relevant elements of "..." argument
+	dots <- list(...)
+	allowed_args <- c("col", "border", "density", "angle", "pbg", "lty")
+	dots <- dots[!is.na(match(names(dots), allowed_args))]
+	specified_args <- NULL
+	specified_args_full <- NULL
+	#check these args if they exist
+	for(i in names(dots))
+	{
+		if(i != "pbg")
+		{
+			temp <- dots[names(dots) == i][[1]]
+			if(length(temp) != 1 & length(temp) != nrow(object)) stop(paste0("length of '",i, "' argument incorrect"))
+			#append information to data attributes to account for subsetting
+			#(call these columns "*_blah" and check they're unique
+			if(length(temp) > 1)
+			{
+				if(paste0(i, "_blah") %in% names(object)) stop(paste("Please rename", paste0(i, "_blah"), "column"))
+				object[[paste0(i, "_blah")]] <- temp
+				dots <- dots[-which(names(dots) == i)]
+				specified_args <- c(specified_args, i)
+				specified_args_full <- c(specified_args_full, paste0(i, "_blah"))
+			}
+		}
+		if(i == "pbg")
+		{
+			if(length(dots[names(dots) == i][[1]]) != 1) stop("'pgb' argument not of length 1")
+		}
+	}
+	
 	#check min and max zoom levels match against those found in the SpatialPolygonsTiles object
 	if(min_zoom < object@tiles$min_zoom | max_zoom > object@tiles$max_zoom)
 	{
@@ -106,7 +136,20 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 		pathtofile <- file.path(title, tiles[i, 3], tiles[i, 1])
 		png(file.path(pathtofile, paste0(tiles[i, 2], ".png")), width = 248, height = 248, bg = 'transparent')
 		par(mar = c(0, 0, 0, 0), xaxs = "i", yaxs = "i")
-		plot(temp_polys, xlim = temp_tiles[1:2], ylim = temp_tiles[3:4], ...)
+		#create list of additional arguments to pass to plot
+		temp_dots <- list(x = temp_polys, xlim = temp_tiles[1:2], ylim = temp_tiles[3:4])
+		if(length(specified_args) > 0)
+		{
+			temp_args <- temp_polys@data[, match(specified_args_full, names(temp_polys)), drop = FALSE]
+			if(ncol(temp_args) > 1) temp_args <- as.list(temp_args)
+			else temp_args <-list(unlist(temp_args))
+			names(temp_args) <- specified_args
+			for(j in 1:length(temp_dots)) temp_args[[names(temp_dots)[j]]] <- temp_dots[[j]]
+		}
+		else temp_args <- temp_dots
+		if(length(dots) > 0) for(j in 1:length(dots)) temp_args[[names(dots)[j]]] <- dots[[j]]
+		#now plot according to arguments
+		do.call(plot, temp_args)
 		dev.off()
 	}
 }
