@@ -3,7 +3,7 @@ createmaptiles
 
 R package for creating scalable map tiles based on geo-referenced polygon data.
 
-This extends the SpatialPolygonsDataFrame class defined in the "sp" package to produce a new SpatialPolygonsTiles class. This new class contains an additional "tiles" slot, that maps each polygon to each tile that contains it at each required zoom level. An "tiles" method then produces scalable map tiles for a range of zoom levels, that can be specified in eitherTMS or OSM formats. A further function exists that will convert a directory already in one of these formats to the other one, and visa-versa.
+This extends the SpatialPolygonsDataFrame class defined in the "sp" package to produce a new SpatialPolygonsTiles class. This new class contains an additional "tiles" slot, that maps each polygon to each corresponding tile at each required zoom level. A "tiles" method then produces scalable map tiles for a range of zoom levels, that can be specified in eitherTMS or OSM formats. A further function exists that will convert a directory already in one of these formats to the other one, and visa-versa.
 
 ### License
 
