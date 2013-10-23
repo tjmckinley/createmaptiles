@@ -10,15 +10,18 @@ Description: This packages takes 'Spatial' objects (as defined in the 'sp'
 Depends:
     sp,
     rgdal
+Imports:
+    methods
 License: GPL-3
 Collate:
-    'areaRect.R'
+    'Class-SpatialPolygonsTiles.R'
+    'LongLatToTileNum.R'
+    'SpatialPolygonsTiles-methods.R'
+    'TileNumToLongLat.R'
     'calcTileCoords.R'
     'containsBounds.R'
+    'convertTileFormat.R'
+    'convertTileObjects.R'
     'createTiles.R'
-    'createTilesRecur.R'
-    'createTilesWorker.R'
-    'findMinZoom.R'
     'fitBounds.R'
-    'LongLatToTileNum.R'
-    'TileNumToLongLat.R'
+    'fitBoundsRecur.R'

@@ -1,6 +1,9 @@
 \name{SpatialPolygonsTiles-class}
 \docType{class}
 \alias{SpatialPolygonsTiles-class}
+\alias{SpatialPolygonsTiles}
+\alias{tiles,SpatialPointsTiles-method}
+\alias{"[",SpatialPointsTiles-method}
 
 \title{Class "SpatialPolygonsTiles" }
 \description{class to hold polygons with attributes, which can be used to generate scalable map tiles}
@@ -14,6 +17,8 @@ The \code{tiles} method for SpatialPolygonTiles takes the following arguments:
   \item{ask}{default TRUE; asks user to clarify before creating tiles (set to FALSE if running in batch mode)}
   \item{...}{other arguments passed through}
 }
+Note that this method can only take additional arguments for 'col, 'border', 'density', 'angle', 'pbg' and 'lty'. The \code{plot} method works in the same way as for \link{SpatialPolygonsDataFrame} objects.
+}
 \section{Objects from the Class}{
 Objects can be created by calls to the function \link{convertToTileObject}, and the tile information removed by a call to \link{convertFromTileObject}
 }
@@ -24,15 +29,16 @@ Objects can be created by calls to the function \link{convertToTileObject}, and 
     \item{\code{plotOrder}:}{Object of class \code{"integer"}; see \link{SpatialPolygons-class} }
     \item{\code{bbox}:}{Object of class \code{"matrix"}; see \link{Spatial-class}}
     \item{\code{proj4string}:}{Object of class \code{"CRS"}; see \link{CRS-class}}
-    \item{\code{tileinfo}:}{Object of class \code{"list"}; see \link{createT}
+    \item{\code{tiles}:}{Object of class \code{"list"}; see \link{convertToTileObject}}
   }
 }
 \section{Extends}{
-Class \code{"SpatialPolygonsDataFrame"} from the 'sp' package, directly.
+Class \code{SpatialPolygonsDataFrame} from the 'sp' package, directly.
 }
 \section{Methods}{
-Methods defined with class "SpatialPolygonsTiles" in the signature:
+See \code{\linkS4class{SpatialPolygonsDataFrame}} for inherited methods.
   \describe{
+    \item{[}{\code{signature(x = "SpatialPolygonsTiles")}: select subset of (sets of) polygons; NAs are not permitted in the row index}
     \item{tiles}{\code{signature(x = "SpatialPolygonsTiles")}: produce a set of map tiles from object.}
   }
 }
