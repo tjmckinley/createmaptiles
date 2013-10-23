@@ -8,7 +8,7 @@ convertToTileObject <- function(object, min_zoom = 1, max_zoom = 18)
 	if(class(object) != "SpatialPolygonsDataFrame") stop("'object' not a 'SpatialPolygonsDataFrame' object\n")
 	
 	#convert object to latitude/longitude
-	if(proj4string(object) != "+proj=longlat +ellps=WGS84") object <- spTransform(object, CRS("+proj=longlat"))
+	if(proj4string(object) != "+proj=merc") object <- spTransform(object, CRS("+proj=merc"))
 	
 	res <- new("SpatialPolygonsTiles")
 	res@bbox <- object@bbox

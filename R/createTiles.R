@@ -31,7 +31,7 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 	#check min and max zoom levels match against those found in the SpatialPolygonsTiles object
 	if(min_zoom < object@tiles$min_zoom | max_zoom > object@tiles$max_zoom)
 	{
-		stop(paste("'min_zoom' and 'max_zoom' from SpatialPolygonsTiles object are:", object@tiles$min_zoom, "and", object@tiles$min_zoom, ",\n values chosen in function are:", min_zoom, "and", max_zoom, ".\n"))
+		stop(paste("'min_zoom' and 'max_zoom' from SpatialPolygonsTiles object are:", object@tiles$min_zoom, "and", object@tiles$max_zoom, ",\n values chosen in function are:", min_zoom, "and", max_zoom, ".\n"))
 	}
 	
 	#simple user-input check before creating tiles
@@ -41,7 +41,7 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 		ansincorr <- 0
 		while(ansind == 0 & ansincorr < 3)
 		{
-			ans <- readline(paste0("This will create map tiles in \"", title, "\" folder;\nfrom a minimum zoom level of ", min_zoom, ", up to a maximum zoom level of ", max_zoom, ".\nThe files will be saved in ", ifelse(tms == "tms", "TMS", "OSM"), " specification.\nDo you wish to continue (y/n)?\n"))
+			ans <- readline(paste0("\nThis will create map tiles in \"", title, "\" folder;\nfrom a minimum zoom level of ", min_zoom, ", up to a maximum zoom level of ", max_zoom, ".\nThe files will be saved in ", ifelse(tms == "tms", "TMS", "OSM"), " specification.\nDo you wish to continue (y/n)?\n"))
 			if(!all(match(ans, c("y", "n"))))
 			{
 				cat("Incorrect input\n")
@@ -56,6 +56,9 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 	#now create directory structure
 	if(!dir.create(title)) stop(paste(title, "directory already exists\n"))
 	
+	#check object is in Mercator projection
+	if(proj4string(object) != "+proj=merc +ellps=WGS84") stop("'object' not in correct projection (+proj=merc +ellps=WGS84)")
+	
 	#now generate all tiles to render
 	tiles <- object@tiles$coords
 	temp_tiles <- sapply(tiles, nrow)
@@ -68,6 +71,7 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 	tiles <- tiles[tiles[, 3] <= max_zoom, ]
 	
 	#match polygons to tiles
+	rownames(tiles) <- 1:nrow(tiles)
 	tiles <- as.data.frame(tiles)
 	tiles <- cbind(tiles, apply(tiles, 1, function(x) paste(x[1:3], collapse = " ")))
 	tiles[, 5] <- factor(tiles[, 5])
@@ -88,23 +92,12 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 	#now render tiles
 	for(i in 1:nrow(tiles))
 	{
-		
-		browser()
 		#calculate tile coordinates in longitude/latitude
 		temp_tiles <- calcTileCoords(tiles[i, 1:2], tiles[i, 3])
-		
-		#transform tiles to Mercator projection for plotting
-		temp_tiles[1:2] <- temp_tiles[1:2] * pi / 180
-		temp_tiles[3:4] <- temp_tiles[3:4] * pi / 180
-		temp_tiles[3:4] <- log(tan(temp_tiles[3:4]) + (1 / cos(temp_tiles[3:4])))
-		temp_tiles <- temp_tiles * 6378137
 		
 		#extract only those polygons contained in tile for plotting
 		temp_polys <- tiles_polys[match(tiles[i, 5], names(tiles_polys))][[1]]
 		temp_polys <- object[temp_polys, ]
-		
-		#convert object to Mercator projection for plotting
-		temp_polys <- spTransform(temp_polys, CRS("+proj=merc"))
 	
 		#convert y-coordinates to TMS if required
 		if(tms == TRUE)	tiles[i, 2] <- (2 ^ tiles[i, 3]) - tiles[i, 2] - 1

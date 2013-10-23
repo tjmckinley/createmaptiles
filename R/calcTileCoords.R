@@ -15,6 +15,13 @@ calcTileCoords <- function(coords, zoom)
 	#append coordinates together to form tile coordinates
 	coords <- c(top_left, bottom_right)
 	coords <- as.numeric(coords[c(1, 3, 4, 2)])
+	
+	#transform tiles to Mercator projection for plotting
+	coords[1:2] <- coords[1:2] * pi / 180
+	coords[3:4] <- coords[3:4] * pi / 180
+	coords[3:4] <- log(tan(coords[3:4]) + (1 / cos(coords[3:4])))
+	coords <- coords * 6378137
+	
 	coords
 }
 
