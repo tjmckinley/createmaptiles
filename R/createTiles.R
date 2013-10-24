@@ -1,11 +1,14 @@
 #function that takes a SpatialPolygonsDataFrame object and produces map tiles
 
-createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask = TRUE, ...)
+createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE, ask = TRUE, produce_html = TRUE, ...)
 {
 	#some checks to ensure correct inputs
 	if(missing(object)) stop("'object' missing\n")
 	if(missing(title)) stop("'title' missing\n")
 	if(missing(max_zoom)) stop("'max_zoom' missing\n")
+	if(missing(tms)) stop("'tms' missing\n")
+	if(missing(ask)) stop("'ask' missing\n")
+	if(missing(produce_html)) stop("'produce_html' missing\n")
 	if(class(object) != "SpatialPolygonsTiles") stop("'object' not a 'SpatialPolygonsTiles' object\n")
 	if(!is.character(title[1])) stop("'title' is not a character\n")
 	if(length(title) > 1)
@@ -13,6 +16,14 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 		cat("'title' has length > 1, so only first element is used\n")
 		title <- title[1]
 	}
+	if(!is.numeric(min_zoom[1])) stop("'min_zoom' is not numeric\n")
+	if(length(min_zoom) > 1)
+	{
+		cat("'min_zoom' has length > 1, so only first element is used\n")
+		min_zoom <- min_zoom[1]
+	}
+	if(round(min_zoom) != min_zoom) stop("'min_zoom' is not an integer\n")
+	if(min_zoom < 1 | min_zoom > 18) stop("'min_zoom' not in the range 1-18\n")
 	if(!is.numeric(max_zoom[1])) stop("'max_zoom' is not numeric\n")
 	if(length(max_zoom) > 1)
 	{
@@ -20,12 +31,24 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 		max_zoom <- max_zoom[1]
 	}
 	if(round(max_zoom) != max_zoom) stop("'max_zoom' is not an integer\n")
-	if(max_zoom < 0 | max_zoom > 18) stop("'max_zoom' not in the range 0-18\n")
+	if(max_zoom < 1 | max_zoom > 18) stop("'max_zoom' not in the range 1-18\n")
 	if(!is.logical(tms)) stop("'tms' is not a logical value")
 	if(length(tms) > 1)
 	{
 		cat("'tms' has length > 1, so only first element is used\n")
 		tms <- tms[1]
+	}
+	if(!is.logical(ask)) stop("'ask' is not a logical value")
+	if(length(ask) > 1)
+	{
+		cat("'ask' has length > 1, so only first element is used\n")
+		ask <- ask[1]
+	}
+	if(!is.logical(produce_html)) stop("'produce_html' is not a logical value")
+	if(length(produce_html) > 1)
+	{
+		cat("'produce_html' has length > 1, so only first element is used\n")
+		produce_html <- produce_html[1]
 	}
 	
 	#extract only relevant elements of "..." argument
@@ -152,4 +175,27 @@ createTiles <- function(object, title, min_zoom, max_zoom = 18, tms = FALSE, ask
 		do.call(plot, temp_args)
 		dev.off()
 	}
+	
+	#if requested, produce a simple HTML page for checking
+	if(produce_html == TRUE)
+	{
+		htmlpage <- find.package("createmaptiles")
+		htmlpage <- paste0(htmlpage, file.path("webpage", "index.html"))
+		htmlpage <- readLines(htmlpage)
+		#set centre for map
+		shape_centre <- rev(apply(bbox(object), 1, mean))
+		htmlpage[32] <- sub("LAT", as.character(shape_centre[1]), htmlpage[32])
+		htmlpage[32] <- sub("LONG", as.character(shape_centre[2]), htmlpage[32])
+		#set path to folder
+		htmlpage[33] <- sub("PATHTOFILE", title, htmlpage[33])
+		#set filetype
+		htmlpage[33] <- sub("FILETYPE", "png", htmlpage[33])
+		#set zoom levels
+		htmlpage[34] <- sub("MINZOOM", min_zoom, htmlpage[34])
+		htmlpage[35] <- sub("MAXZOOM", max_zoom, htmlpage[35])
+		#set specification
+		htmlpage[37] <- sub("TMS", ifelse(tms == TRUE, "true", "false"), htmlpage[37])
+		#write out html page to map tiles folder
+		writeLines(htmlpage, paste0(file.path(title, "index.html")))
+	}	
 }

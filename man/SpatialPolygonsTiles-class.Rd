@@ -13,8 +13,9 @@ The \code{tiles} method for SpatialPolygonTiles takes the following arguments:
   \item{x}{a SpatialPolygonsTiles object}
   \item{title}{a character denoting the path to the folder where the tiles are to be created; folder does not need to exist}
   \item{max_zoom}{default 18; the maximum zoom level required (ranges between 1--18)}
-  \item{tms}{default "tms"; sets map tile coordinates to TMS or OSM specification}
+  \item{tms}{default FALSE; sets map tile coordinates to TMS or OSM specification}
   \item{ask}{default TRUE; asks user to clarify before creating tiles (set to FALSE if running in batch mode)}
+  \item{produce_html}{default TRUE; produces a simple webpage in the 'title' folder (index.html) to display scalable map. The page is build using the Leaflet javascript library.}
   \item{...}{other arguments passed through}
 }
 Note that this method can only take additional arguments for 'col, 'border', 'density', 'angle', 'pbg' and 'lty'. The \code{plot} method works in the same way as for \link{SpatialPolygonsDataFrame} objects.
@@ -49,6 +50,7 @@ See \code{\linkS4class{SpatialPolygonsDataFrame}} for inherited methods.
 }
 \references{
 	http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
+	http://leafletjs.com/
 }
 \examples{
 # simple example, from scratch:

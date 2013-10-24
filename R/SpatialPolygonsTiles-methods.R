@@ -1,6 +1,6 @@
 #method to produce map tiles from SpatialPolygonsTiles object
 setMethod("tiles", signature(object = "SpatialPolygonsTiles"),
-	function(object, ...) createTiles(object, ...))
+	function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE, ask = TRUE, produce_html = TRUE, ...) createTiles(object, ...))
 	
 #method to amend subsetting to include subsetting tiles
 setMethod("[", "SpatialPolygonsTiles", function(x, i, j, ... , drop = TRUE)

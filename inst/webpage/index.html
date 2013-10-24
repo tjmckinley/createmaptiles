@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Zoomable map tiles</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+	<style>
+		.info {
+		    padding: 6px 8px;
+		    font: 14px/16px Arial, Helvetica, sans-serif;
+		    background: white;
+		    background: rgba(255,255,255,0.8);
+		    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+		    border-radius: 5px;
+		}
+		.info h4 {
+		    margin: 0 0 5px;
+		    color: #777;
+		}
+	</style>
+</head>
+<body>
+	<div id="map" style="width: 800px; height: 800px"></div>
+
+	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+	
+	<script>
+		//create map
+		var map = L.map('map').setView([LAT, LONG], 1);
+        L.tileLayer('PATHTOFILE/{z}/{x}/{y}.FILETYPE', {
+            minZoom: MINZOOM,
+            maxZoom: MAXZOOM,
+            attribution: USER
+            tms: TMS
+        }).addTo(map);
+	</script>
+</body>
+</html>
