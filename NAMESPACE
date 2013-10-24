@@ -4,4 +4,4 @@ export(convertFromTileObject)
 
 exportClasses(SpatialPolygonsTiles)
 
-exportMethods(tile)
+exportMethods(tiles)
