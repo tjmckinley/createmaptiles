@@ -27,4 +27,20 @@ Returns a \link{SpatialPolygonsDataFrame} or \link{SpatialPolygonsTiles} object
 	http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 }
 \examples{
+#load UK administration states shapefile using 'rgdal' package
+#(generated from Natural Earth: see http://www.naturalearthdata.com)
+pathtoshapefile <- find.package("createmaptiles")
+pathtoshapefile <- file.path(pathtoshapefile,"extdata","uk")
+uk.shp <- readOGR(pathtoshapefile, "uk")
+
+#convert to SpatialPolygonsTiles object
+uk.tl <- convertToTileObject(uk.shp, max_zoom = 6)
+
+#produce map tiles in "uk" folder in current working directory
+#(once the function has run, the file './uk/index.html' allows
+#the map tiles to be explored)
+tiles(uk.tl, "uk", max_zoom = 6)
+
+#now randomly colour polygons
+tiles(uk.tl, "uk_col", max_zoom = 6, col = topo.colors(64)[sample(1:64, nrow(uk.tl), replace = TRUE)])
 }

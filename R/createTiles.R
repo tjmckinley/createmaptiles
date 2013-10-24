@@ -180,21 +180,23 @@ createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE,
 	if(produce_html == TRUE)
 	{
 		htmlpage <- find.package("createmaptiles")
-		htmlpage <- paste0(htmlpage, file.path("webpage", "index.html"))
+		htmlpage <- file.path(htmlpage, "webpage", "index.html")
 		htmlpage <- readLines(htmlpage)
 		#set centre for map
-		shape_centre <- rev(apply(bbox(object), 1, mean))
-		htmlpage[32] <- sub("LAT", as.character(shape_centre[1]), htmlpage[32])
-		htmlpage[32] <- sub("LONG", as.character(shape_centre[2]), htmlpage[32])
-		#set path to folder
-		htmlpage[33] <- sub("PATHTOFILE", title, htmlpage[33])
+		coords <- rev(apply(bbox(object), 1, mean))
+		#convert to latitude and longitude
+		coords <- coords / 6378137
+		coords[1] <- atan(sinh(coords[1]))
+		coords <- coords * 180 / pi
+		htmlpage[32] <- sub("LAT", as.character(coords[1]), htmlpage[32])
+		htmlpage[32] <- sub("LONG", as.character(coords[2]), htmlpage[32])
 		#set filetype
 		htmlpage[33] <- sub("FILETYPE", "png", htmlpage[33])
 		#set zoom levels
 		htmlpage[34] <- sub("MINZOOM", min_zoom, htmlpage[34])
 		htmlpage[35] <- sub("MAXZOOM", max_zoom, htmlpage[35])
 		#set specification
-		htmlpage[37] <- sub("TMS", ifelse(tms == TRUE, "true", "false"), htmlpage[37])
+		htmlpage[36] <- sub("TMS", ifelse(tms == TRUE, "true", "false"), htmlpage[36])
 		#write out html page to map tiles folder
 		writeLines(htmlpage, paste0(file.path(title, "index.html")))
 	}	

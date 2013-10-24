@@ -30,10 +30,9 @@
 	<script>
 		//create map
 		var map = L.map('map').setView([LAT, LONG], 1);
-        L.tileLayer('PATHTOFILE/{z}/{x}/{y}.FILETYPE', {
+        L.tileLayer('{z}/{x}/{y}.FILETYPE', {
             minZoom: MINZOOM,
             maxZoom: MAXZOOM,
-            attribution: USER
             tms: TMS
         }).addTo(map);
 	</script>
