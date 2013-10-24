@@ -1,1 +1,7 @@
 export(convertTileFormat)
+export(convertToTileObject)
+export(convertFromTileObject)
+
+exportClasses(SpatialPolygonsTiles)
+
+exportMethods(tile)
