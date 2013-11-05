@@ -53,18 +53,21 @@ See \code{\linkS4class{SpatialPolygonsDataFrame}} for inherited methods.
 	http://leafletjs.com/
 }
 \examples{
-# simple example, from scratch:
-Sr1 = Polygon(cbind(c(2,4,4,1,2),c(2,3,5,4,2)))
-Sr2 = Polygon(cbind(c(5,4,2,5),c(2,3,2,2)))
-Sr3 = Polygon(cbind(c(4,4,5,10,4),c(5,3,2,5,5)))
-Sr4 = Polygon(cbind(c(5,6,6,5,5),c(4,4,3,3,4)), hole = TRUE)
+#load UK administration states shapefile using 'rgdal' package
+#(generated from Natural Earth: see http://www.naturalearthdata.com)
+pathtoshapefile <- find.package("createmaptiles")
+pathtoshapefile <- file.path(pathtoshapefile,"extdata","uk")
+uk.shp <- readOGR(pathtoshapefile, "uk")
 
-Srs1 = Polygons(list(Sr1), "s1")
-Srs2 = Polygons(list(Sr2), "s2")
-Srs3 = Polygons(list(Sr3, Sr4), "s3/4")
-SpP = SpatialPolygons(list(Srs1,Srs2,Srs3), 1:3)
-plot(SpP, col = 1:3, pbg="white")
+#convert to SpatialPolygonsTiles object
+uk.tl <- convertToTileObject(uk.shp, max_zoom = 6)
 
+#produce map tiles in "uk" folder in current working directory
+#(once the function has run, the file './uk/index.html' allows
+#the map tiles to be explored)
+tiles(uk.tl, "uk", max_zoom = 6)
 
+#now randomly colour polygons
+tiles(uk.tl, "uk_col", max_zoom = 6, col = topo.colors(64)[sample(1:64, nrow(uk.tl), replace = TRUE)])
 }
 \keyword{classes}
