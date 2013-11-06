@@ -109,9 +109,6 @@ createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE,
 	#now create directory structure
 	if(!dir.create(title)) stop(paste(title, "directory already exists\n"))
 	
-	#check object is in Mercator projection
-	if(proj4string(object) != "+proj=merc +ellps=WGS84") stop("'object' not in correct projection (+proj=merc +ellps=WGS84)")
-	
 	#now generate all tiles to render
 	tiles <- object@tiles$coords
 	temp_tiles <- sapply(tiles, nrow)

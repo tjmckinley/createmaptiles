@@ -42,6 +42,7 @@ convertTileFormat <- function(dir)
 	#given that directory exists, extract all zoom levels
 	zooms <- list.files(dir)
 	zooms <- as.numeric(zooms)
+	zooms <- na.omit(zooms)
 	if(min(zooms) < 0 | max(zooms) > 18)
 	{
 		cat("Zoom levels in directory invalid\n")

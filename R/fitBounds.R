@@ -1,10 +1,7 @@
 #function to determine tile coordinates that contain bounding box
 #based on a given zoom level
 fitBounds <- function(object, min_zoom, max_zoom)
-{	
-	#check object is in Mercator projection
-	if(proj4string(object) != "+proj=merc +ellps=WGS84") stop("'object' not in correct projection (+proj=merc +ellps=WGS84)")
-			
+{				
 	#define range of map
 	nrows <- 2 ^ min_zoom
 	
