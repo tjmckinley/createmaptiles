@@ -6,13 +6,16 @@
 \title{Converts to and from SpatialPolygonsTiles objects}
 \description{These functions will convert a SpatialPolygonsDataFrame object to a SpatialPolygonsTiles object, or visa-versa.}
 \usage{
-	convertToTileObject(object, min_zoom = 1, max_zoom = 18)
+	convertToTileObject(object, min_zoom = 1, max_zoom = 10)
 	convertFromTileObject(object)
 }
 \arguments{
   \item{object}{a \link{SpatialPolygonsDataFrame} object (for convertTo*), or a \link{SpatialPolygonsTiles} object (for convertFrom*)}
   \item{min_zoom}{default 1; the minimum zoom level required (ranges between 1--18)}
-  \item{max_zoom}{default 18; the maximum zoom level required (ranges between 1--18)}
+  \item{max_zoom}{default 10; the maximum zoom level required (ranges between 1--18)}
+}
+\details{
+Converts object into Spherical Mercator projection using details specified at http://proj.maptools.org/faq.html. This should render tiles compatible with GoogleMaps API etc.
 }
 \value{
 Returns a \link{SpatialPolygonsDataFrame} or \link{SpatialPolygonsTiles} object
@@ -25,6 +28,7 @@ Returns a \link{SpatialPolygonsDataFrame} or \link{SpatialPolygonsTiles} object
 }
 \references{
 	http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
+	http://proj.maptools.org/faq.html
 }
 \examples{
 #load UK administration states shapefile using 'rgdal' package
