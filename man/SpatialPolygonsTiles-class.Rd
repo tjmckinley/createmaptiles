@@ -16,6 +16,7 @@ The \code{tiles} method for SpatialPolygonTiles takes the following arguments:
   \item{tms}{default FALSE; sets map tile coordinates to TMS or OSM specification}
   \item{ask}{default TRUE; asks user to clarify before creating tiles (set to FALSE if running in batch mode)}
   \item{produce_html}{default TRUE; produces a simple webpage in the 'title' folder (index.html) to display scalable map. The page is build using the Leaflet javascript library.}
+  \item{spher_merc}{default TRUE; transforms current projection into Spherical Mercator for use with GoogleMaps API etc.}
   \item{...}{other arguments passed through}
 }
 Note that this method can only take additional arguments for 'col, 'border', 'density', 'angle', 'pbg' and 'lty'. The \code{plot} method works in the same way as for \link{SpatialPolygonsDataFrame} objects.

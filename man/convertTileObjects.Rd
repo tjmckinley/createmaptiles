@@ -13,6 +13,7 @@
   \item{object}{a \link{SpatialPolygonsDataFrame} object (for convertTo*), or a \link{SpatialPolygonsTiles} object (for convertFrom*)}
   \item{min_zoom}{default 1; the minimum zoom level required (ranges between 1--18)}
   \item{max_zoom}{default 10; the maximum zoom level required (ranges between 1--18)}
+  \item{spher_merc}{default TRUE; transforms current projection into Spherical Mercator for use with GoogleMaps API etc.}
 }
 \details{
 Converts object into Spherical Mercator projection using details specified at http://proj.maptools.org/faq.html. This should render tiles compatible with GoogleMaps API etc.

@@ -1,14 +1,16 @@
 #function that takes a SpatialPolygonsDataFrame object and produces map tiles
 
-createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE, ask = TRUE, produce_html = TRUE, ...)
+createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE, ask = TRUE, produce_html = TRUE, spher_merc = TRUE, ...)
 {
 	#some checks to ensure correct inputs
 	if(missing(object)) stop("'object' missing\n")
 	if(missing(title)) stop("'title' missing\n")
+	if(missing(min_zoom)) stop("'min_zoom' missing\n")
 	if(missing(max_zoom)) stop("'max_zoom' missing\n")
 	if(missing(tms)) stop("'tms' missing\n")
 	if(missing(ask)) stop("'ask' missing\n")
 	if(missing(produce_html)) stop("'produce_html' missing\n")
+	if(missing(spher_merc)) stop("'spher_merc' missing\n")
 	if(class(object) != "SpatialPolygonsTiles") stop("'object' not a 'SpatialPolygonsTiles' object\n")
 	if(!is.character(title[1])) stop("'title' is not a character\n")
 	if(length(title) > 1)
@@ -49,6 +51,31 @@ createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE,
 	{
 		cat("'produce_html' has length > 1, so only first element is used\n")
 		produce_html <- produce_html[1]
+	}
+	if(!is.logical(spher_merc)) stop("'spher_merc' is not a logical value")
+	if(length(spher_merc) > 1)
+	{
+		cat("'spher_merc' has length > 1, so only first element is used\n")
+		spher_merc <- spher_merc[1]
+	}
+	#if necessary, convert to Spherical Mercator projection
+	if(spher_merc == TRUE)
+	{
+		if(proj4string(object) != "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +no_defs")
+		{
+			#convert to SpatialPolygonsDataFrame object
+			temp <- convertFromTileObject(object)
+			
+			#transform to Spherical Mercator projection
+			temp <- spTransform(temp, CRS("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +no_defs"))
+	
+			#rebind the tiles
+			tiles <- object@tiles$coords
+			tiles <- list(min_zoom = object@tiles$min_zoom, max_zoom = object@tiles$max_zoom, coords = tiles)
+		
+			#convert back to SpatialPolygonsTiles object	
+			object <- convertToTileObject_internal(temp, tiles)
+		}	
 	}
 	
 	#extract only relevant elements of "..." argument
@@ -107,7 +134,27 @@ createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE,
 	}
 	
 	#now create directory structure
-	if(!dir.create(title)) stop(paste(title, "directory already exists\n"))
+	if(!dir.create(title))
+	{
+		if(ask)
+		{
+			ansind <- 0
+			ansincorr <- 0
+			while(ansind == 0 & ansincorr < 3)
+			{
+				ans <- readline(paste0("'", title, "' directory already exists, do you want to overwrite (y/n)?\n"))
+				if(!all(match(ans, c("y", "n"))))
+				{
+					cat("Incorrect input\n")
+					ansincorr <- ansincorr + 1
+				}
+				else ansind <- 1
+			}
+			if(ansind == 0)	stop("Too many incorrect inputs, quitting function...\n")
+			if(ans == "n") stop("Quitting function.\n")
+		}
+		cat(paste("Overwriting", title, "directory...\n"))
+	}
 	
 	#convert object to Spherical Mercator projection
 	if(proj4string(object) != "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +no_defs")
