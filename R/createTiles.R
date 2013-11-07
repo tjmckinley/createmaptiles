@@ -5,12 +5,12 @@ createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE,
 	#some checks to ensure correct inputs
 	if(missing(object)) stop("'object' missing\n")
 	if(missing(title)) stop("'title' missing\n")
-	if(missing(min_zoom)) stop("'min_zoom' missing\n")
-	if(missing(max_zoom)) stop("'max_zoom' missing\n")
-	if(missing(tms)) stop("'tms' missing\n")
-	if(missing(ask)) stop("'ask' missing\n")
-	if(missing(produce_html)) stop("'produce_html' missing\n")
-	if(missing(spher_merc)) stop("'spher_merc' missing\n")
+#	if(missing(min_zoom)) stop("'min_zoom' missing\n")
+#	if(missing(max_zoom)) stop("'max_zoom' missing\n")
+#	if(missing(tms)) stop("'tms' missing\n")
+#	if(missing(ask)) stop("'ask' missing\n")
+#	if(missing(produce_html)) stop("'produce_html' missing\n")
+#	if(missing(spher_merc)) stop("'spher_merc' missing\n")
 	if(class(object) != "SpatialPolygonsTiles") stop("'object' not a 'SpatialPolygonsTiles' object\n")
 	if(!is.character(title[1])) stop("'title' is not a character\n")
 	if(length(title) > 1)
@@ -142,7 +142,7 @@ createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE,
 			ansincorr <- 0
 			while(ansind == 0 & ansincorr < 3)
 			{
-				ans <- readline(paste0("'", title, "' directory already exists, do you want to overwrite (y/n)?\n"))
+				ans <- readline(paste0("Do you want to overwrite (y/n)?\n"))
 				if(!all(match(ans, c("y", "n"))))
 				{
 					cat("Incorrect input\n")
@@ -153,7 +153,9 @@ createTiles <- function(object, title, min_zoom = 1, max_zoom = 18, tms = FALSE,
 			if(ansind == 0)	stop("Too many incorrect inputs, quitting function...\n")
 			if(ans == "n") stop("Quitting function.\n")
 		}
-		cat(paste("Overwriting", title, "directory...\n"))
+		cat(paste0("Overwriting '", title, "' directory...\n"))
+		unlink(title, recursive = TRUE)
+		dir.create(title)
 	}
 	
 	#convert object to Spherical Mercator projection
